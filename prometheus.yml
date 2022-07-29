@@ -1,0 +1,57 @@
+
+global:
+  scrape_interval: 10s
+  evaluation_interval: 10s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+rule_files:
+# - "first_rules.yml"
+# - "second_rules.yml"
+
+scrape_configs:
+
+  - job_name: "node-exporter"
+    ec2_sd_configs:
+      - region: ap-northeast-2
+        port: 9100
+      - region: ap-northeast-2
+        port: 8080
+      - region: ap-northeast-2
+        port: 9100
+    relabel_configs:
+      - source_labels: [__meta_ec2_tag_Name]
+        target_label: instance
+      - source_labels: [__meta_ec2_private_ip]
+        target_label: ip
+
+  - job_name: "cadvisor"
+
+    ec2_sd_configs:
+      - region: ap-northeast-2
+        port: 8080
+    relabel_configs:
+      - source_labels: [__meta_ec2_tag_Name]
+        target_label: instance
+      - source_labels: [__meta_ec2_private_ip]
+        regex: '(.*)'
+        replacement: '${1}:8080'
+        action: replace
+        target_label: __address__
+
+  - job_name: "docker-metrics"
+    ec2_sd_configs:
+      - region: ap-northeast-2
+        port: 9323
+    relabel_configs:
+      - source_labels: [ __meta_ec2_tag_Name ]
+        target_label: instance
+      - source_labels: [ __meta_ec2_private_ip ]
+        regex: '(.*)'
+        replacement: '${1}:9323'
+        action: replace
+        target_label: __address__
