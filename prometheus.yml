@@ -31,4 +31,4 @@ scrape_configs:
         type: 'A'
         port: 8080
 
-# 도커 메트릭은 어케 불러오지 하..
+# TODO: 도커 메트릭은 어케 불러오지 하..

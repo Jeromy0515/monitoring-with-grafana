@@ -46,13 +46,17 @@ services:
         published: 9100
         protocol: tcp
         mode: host
-    restart: always
     volumes:
       - '/:/host:ro,rslave'
     networks:
       - monitoring_network
     deploy:
       mode: global
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+        window: 30s
       placement:
         constraints:
           - "node.role==worker"
@@ -70,11 +74,15 @@ services:
       - '/sys:/sys:ro'
       - '/var/lib/docker:/var/lib/docker:ro'
       - '/dev/disk:/dev/disk:ro'
-    devices:
-      - "/dev/kmsg:/dev/kmsg"
+    # TODO: Could not configure a source for OOM detection, disabling OOM events: open /dev/kmsg: operation not permitted 해결하기
     networks:
       - monitoring_network
     deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+        window: 60s
       mode: global
       placement:
         constraints:
