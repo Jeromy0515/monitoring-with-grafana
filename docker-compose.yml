@@ -5,49 +5,47 @@ services:
   grafana:
     image: grafana/grafana:latest
     ports:
-      - "3000:3000"
+      - 3000:3000
     networks:
       - monitoring_network
     deploy:
-      mode: replicated
-      replicas: 1
       placement:
         constraints:
-          - "node.role==manager"
+          - node.role==manager
     depends_on:
       - prometheus
 
   prometheus:
     image: prom/prometheus:latest
     ports:
-      - "9090:9090"
+      - 9090:9090
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - monitoring_network
+    extra_hosts:
+      - host.docker.internal:host-gateway
     deploy:
-      mode: replicated
-      replicas: 1
       placement:
         constraints:
-          - "node.role==manager"
+          - node.role==manager
     depends_on:
-      - node_exporter
+      - node-exporter
       - cadvisor
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
     command:
-      - '--path.rootfs=/host'
+      - --path.rootfs=/host
     ports:
       - target: 9100
         published: 9100
         protocol: tcp
         mode: host
     volumes:
-      - '/:/host:ro,rslave'
+      - /:/host:ro,rslave
     networks:
       - monitoring_network
     deploy:
@@ -55,11 +53,10 @@ services:
       restart_policy:
         condition: on-failure
         delay: 10s
-        max_attempts: 5
         window: 30s
       placement:
         constraints:
-          - "node.role==worker"
+          - node.role==worker
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:latest
@@ -69,24 +66,22 @@ services:
         protocol: tcp
         mode: host
     volumes:
-      - '/:/rootfs:ro'
-      - '/var/run:/var/run:ro'
-      - '/sys:/sys:ro'
-      - '/var/lib/docker:/var/lib/docker:ro'
-      - '/dev/disk:/dev/disk:ro'
-    # TODO: Could not configure a source for OOM detection, disabling OOM events: open /dev/kmsg: operation not permitted 해결하기
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      - /dev/disk:/dev/disk:ro
     networks:
       - monitoring_network
     deploy:
       restart_policy:
         condition: on-failure
         delay: 10s
-        max_attempts: 5
         window: 60s
       mode: global
       placement:
         constraints:
-          - "node.role==worker"
+          - node.role==worker
 networks:
   monitoring_network:
     driver: overlay
