@@ -8,6 +8,8 @@ services:
       - 3000:3000
     networks:
       - monitoring_network
+    extra_hosts:
+      - host.docker.internal:host-gateway
     deploy:
       placement:
         constraints:
