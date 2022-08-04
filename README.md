@@ -20,5 +20,5 @@ EOF
 
 ## How to deploy
 ```
-docker stack deploy -c docker-compose.yml <stack-name>
+docker stack deploy -c docker-stack.yml <stack-name>
 ```
