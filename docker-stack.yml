@@ -22,7 +22,7 @@ services:
     command:
       - --config.file=/etc/prometheus/prometheus.yml
     volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/:/etc/prometheus/:ro
     networks:
       - monitoring_network
     extra_hosts:
@@ -40,7 +40,7 @@ services:
     ports:
       - 9093:9093
     volumes:
-      - ./prometheus/alertmanager:/etc/alertmanager:ro
+      - ./alertmanager:/etc/alertmanager:ro
     command:
       - --config.file=/etc/alertmanager/alertmanager.yml
     deploy:
