@@ -8,8 +8,6 @@ services:
       - 3000:3000
     networks:
       - monitoring_network
-    extra_hosts:
-      - host.docker.internal:host-gateway
     deploy:
       placement:
         constraints:
@@ -36,6 +34,24 @@ services:
     depends_on:
       - node-exporter
       - cadvisor
+
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - 9093:9093
+    volumes:
+      - ./alertmanager:/etc/alertmanager:ro
+    command:
+      - --config.file=/etc/alertmanager/alertmanager.yml
+    deploy:
+      placement:
+        constraints:
+          - node.role==manager
+    networks:
+      - monitoring_network
+    depends_on:
+      - prometheus
+
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
