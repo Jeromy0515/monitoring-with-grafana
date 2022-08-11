@@ -1,7 +1,7 @@
 # Monitoring with Grafana
 
 ### Architecture
-![image](https://user-images.githubusercontent.com/77256585/181743469-41d9fd4b-cf6f-44fd-b68d-0fafd32173b5.png)
+![image](https://user-images.githubusercontent.com/77256585/184115803-2242e2f0-18fa-433b-a1cb-4fe4129242f6.png)
 
 
 ## Configure Docker
