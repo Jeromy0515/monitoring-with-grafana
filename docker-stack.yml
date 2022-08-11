@@ -40,7 +40,7 @@ services:
     ports:
       - 9093:9093
     volumes:
-      - ./alertmanager:/etc/alertmanager:ro
+      - ./prometheus/alertmanager:/etc/alertmanager:ro
     command:
       - --config.file=/etc/alertmanager/alertmanager.yml
     deploy:
