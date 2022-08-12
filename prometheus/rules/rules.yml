@@ -68,15 +68,6 @@ groups:
           summary: Prometheus target missing (instance {{ $labels.instance }})
           description: "A Prometheus target has disappeared. An exporter might be crashed.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
-      - alert: PrometheusAlertmanagerJobMissing
-        expr: absent(up{job="alertmanager"})
-        for: 0m
-        labels:
-          severity: warning
-        annotations:
-          summary: Prometheus AlertManager job missing (instance {{ $labels.instance }})
-          description: "A Prometheus AlertManager job has disappeared\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
-
       - alert: PrometheusNotConnectedToAlertmanager
         expr: prometheus_notifications_alertmanagers_discovered < 1
         for: 0m
